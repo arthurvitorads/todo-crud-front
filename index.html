@@ -1,108 +1,208 @@
 <!DOCTYPE html>
-<!-- TODO: PERSONALIZAR TODO O FORMULÁRIO -->
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>Meus Lembretes</title>
-
-        <link rel="stylesheet" href="css/style.css">
-    </head>
-
-    <body>
-        <main class="container">
-            <header class="header">
-                <div>
-                    <h1>Meus Lembretes</h1>
-                    <p>Gerenciamento de lembretes</p>
-                </div>
-
-                <div class="form-actions">
-                    <button id="btnImprimir" class="btn btn-secondary"> Imprimir </button>
-                    <button id="btnNovo" class="btn btn-primary"> + Novo lembrete </button>
-                </div>                
-            </header>
-
-            <!-- FORMULÁRIO -->
-            <section id="formulario" class="card hidden">
-                <h2 id="tituloFormulario">Novo lembrete</h2>
-
-                <form id="formLembrete">
-                    <input type="hidden" id="lembreteId">
-                    <div class="form-group">
-                        <label for="descricao"> Descrição </label>
-                        <input type="text" id="descricao" placeholder="Digite o lembrete..." maxlength="500" required>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" id="btnCancelar" class="btn btn-secondary"> Cancelar </button>
-                        <button type="submit" class="btn btn-primary"> Salvar </button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- FILTRO -->
-            <section class="card">
-                <div class="filtro">
-                    <div class="form-group">
-                        <label for="filtroDescricao"> Descrição </label>
-
-                        <input type="text" id="filtroDescricao" placeholder="Pesquisar...">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tamanhoPagina"> Registros por página </label>
-
-                        <select id="tamanhoPagina">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                        </select>
-                    </div>
-
-                    <button id="btnFiltrar" class="btn btn-primary"> Filtrar </button>
-                </div>
-            </section>
-
-            <!-- LISTAGEM -->
-            <section class="card">
-                <div class="table-header">
-                    <h2>Lembretes</h2>
-
-                    <span id="totalRegistros"> 0 registros </span>
-                </div>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Descrição</th>
-                                <th>Cadastro</th>
-                                <th>Atualização</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="listaLembretes">
-                        </tbody>
-                    </table>
-
-                    <div id="mensagemVazia" class="empty hidden"> Nenhum lembrete encontrado. </div>
-                </div>
-
-                <!-- PAGINAÇÃO -->
-                <div class="pagination">
-                    <button id="btnAnterior" class="btn btn-secondary"> ← Anterior </button>
-                    <span id="paginaAtual"> Página 1 </span>
-                    <button id="btnProximo" class="btn btn-secondary"> Próxima → </button>
-                </div>
-            </section>
-        </main>
-
-        <!-- TOAST -->
-        <div id="toast" class="toast hidden"></div>
-        <script src="js/app.js"></script>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#112a32" />
+    <title>Orbe | Lembretes</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegação">
+        <a class="brand" href="index.html"
+          ><span class="brand-mark">◈</span
+          ><span>orbe<span class="brand-dot">.</span></span></a
+        >
+        <div class="sidebar-caption">ESPAÇO DE TRABALHO</div>
+        <div class="nav-active"><span>▦</span> Meus lembretes</div>
+        <div class="sidebar-bottom">
+          <span class="avatar">O</span
+          ><span>Organize seu dia<small>Seu espaço de foco</small></span>
+        </div>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <span class="eyebrow">PAINEL / LEMBRETES</span>
+            <h1>Suas ideias, em ordem.</h1>
+            <p>Organize o que importa e mantenha tudo sob controle.</p>
+          </div>
+          <div class="header-actions">
+            <button id="btnImprimir" class="btn btn-outline" type="button">
+              ↓ Exportar PDF</button
+            ><button id="btnNovo" class="btn btn-primary" type="button">
+              ＋ Novo lembrete
+            </button>
+          </div>
+        </header>
+        <section class="stats" aria-label="Resumo">
+          <div class="stat">
+            <span>REGISTROS ENCONTRADOS</span><strong id="statTotal">—</strong
+            ><small>De acordo com os filtros</small>
+          </div>
+          <div class="stat">
+            <span>PÁGINA ATUAL</span><strong id="statPagina">1</strong
+            ><small>Da sua listagem</small>
+          </div>
+          <div class="stat stat-accent">
+            <span>FOCO DO DIA</span><strong>Um passo<br />de cada vez.</strong
+            ><small>Continue avançando ✦</small>
+          </div>
+        </section>
+        <section
+          id="formulario"
+          class="panel form-panel hidden"
+          aria-labelledby="tituloFormulario"
+        >
+          <div class="section-title">
+            <div>
+              <span class="eyebrow">EDIÇÃO</span>
+              <h2 id="tituloFormulario">Novo lembrete</h2>
+            </div>
+          </div>
+          <form id="formLembrete">
+            <input id="lembreteId" type="hidden" /><label for="descricao"
+              >Descrição do lembrete <span class="required">*</span></label
+            ><input
+              id="descricao"
+              type="text"
+              maxlength="500"
+              placeholder="Ex.: Finalizar atividade de programação"
+              required
+            />
+            <div class="form-actions">
+              <button id="btnCancelar" class="btn btn-outline" type="button">
+                Cancelar</button
+              ><button id="btnSalvar" class="btn btn-primary" type="submit">
+                Salvar lembrete
+              </button>
+            </div>
+          </form>
+        </section>
+        <section class="panel filters" aria-labelledby="tituloFiltros">
+          <div class="section-title">
+            <div>
+              <span class="eyebrow">ENCONTRE RAPIDAMENTE</span>
+              <h2 id="tituloFiltros">Filtros de pesquisa</h2>
+            </div>
+            <button id="btnLimpar" class="text-button" type="button">
+              Limpar filtros ↺
+            </button>
+          </div>
+          <form id="formFiltros" class="filter-grid">
+            <div class="field field-wide">
+              <label for="filtroDescricao">Descrição</label
+              ><input
+                id="filtroDescricao"
+                type="search"
+                placeholder="Pesquisar por descrição..."
+              />
+            </div>
+            <div class="field">
+              <label for="dataCadastroInicial">Cadastro de</label
+              ><input id="dataCadastroInicial" type="date" />
+            </div>
+            <div class="field">
+              <label for="dataCadastroFinal">Cadastro até</label
+              ><input id="dataCadastroFinal" type="date" />
+            </div>
+            <div class="field">
+              <label for="dataAtualizacaoInicial">Atualização de</label
+              ><input id="dataAtualizacaoInicial" type="date" />
+            </div>
+            <div class="field">
+              <label for="dataAtualizacaoFinal">Atualização até</label
+              ><input id="dataAtualizacaoFinal" type="date" />
+            </div>
+            <div class="field field-size">
+              <label for="tamanhoPagina">Itens por página</label
+              ><select id="tamanhoPagina">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="filter-actions">
+              <button id="btnFiltrar" class="btn btn-primary" type="submit">
+                ⌕ Aplicar filtros
+              </button>
+            </div>
+          </form>
+        </section>
+        <section class="panel results" aria-labelledby="tituloLista">
+          <div class="section-title result-heading">
+            <div>
+              <span class="eyebrow">VISÃO GERAL</span>
+              <h2 id="tituloLista">
+                Todos os lembretes
+                <span id="totalRegistros" class="count">0 registros</span>
+              </h2>
+            </div>
+            <span id="estadoConexao" class="connection">Aguardando API</span>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <button
+                      class="sort-button"
+                      type="button"
+                      data-ordem="Descricao"
+                    >
+                      Descrição <span class="sort-indicator">↕</span>
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      class="sort-button"
+                      type="button"
+                      data-ordem="DataCadastro"
+                    >
+                      Cadastro <span class="sort-indicator">↕</span>
+                    </button>
+                  </th>
+                  <th>
+                    <button
+                      class="sort-button"
+                      type="button"
+                      data-ordem="DataAtualizacao"
+                    >
+                      Atualização <span class="sort-indicator">↕</span>
+                    </button>
+                  </th>
+                  <th>Status</th>
+                  <th class="actions-heading">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="listaLembretes"></tbody>
+            </table>
+            <div id="mensagemVazia" class="empty hidden">
+              <span class="empty-icon">☷</span
+              ><strong>Nenhum lembrete encontrado</strong>
+              <p>Tente ajustar os filtros ou cadastre um novo lembrete.</p>
+            </div>
+          </div>
+          <footer class="pagination">
+            <span id="paginaAtual">Página 1 de 1</span>
+            <div>
+              <button id="btnAnterior" class="btn btn-outline" type="button">
+                ← Anterior</button
+              ><button id="btnProximo" class="btn btn-outline" type="button">
+                Próxima →
+              </button>
+            </div>
+          </footer>
+        </section>
+        <footer class="footer">
+          ORBE / ORGANIZAÇÃO COM PROPÓSITO
+          <span>Feito para manter o foco.</span>
+        </footer>
+      </main>
+    </div>
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  </body>
 </html>
